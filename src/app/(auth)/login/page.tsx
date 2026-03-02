@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ShieldAlert, ArrowLeft } from "lucide-react";
+import { ShieldAlert, ArrowLeft, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,52 +32,69 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4">
+    // BUNGKUS UTAMA DENGAN DARK MODE BACKGROUND
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center p-4 transition-colors duration-500">
       {/* Tombol kembali ke Beranda */}
       <Link
         href="/"
-        className="absolute top-8 left-8 flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+        className="absolute top-8 left-8 flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Kembali ke Beranda
       </Link>
 
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md animate-in fade-in zoom-in-95 duration-500">
+        {/* LOGO AREA */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="w-10 h-10 text-red-600" />
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              <span className="text-red-600">Si-</span>Walu
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-red-100 dark:bg-red-500/10 rounded-2xl shadow-inner">
+              <ShieldAlert className="w-8 h-8 text-red-600 dark:text-red-500" />
+            </div>
+            <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+              <span className="text-red-600 dark:text-red-500">Si-</span>Walu
             </h1>
           </div>
         </div>
 
-        <Card className="shadow-lg border-t-4 border-t-slate-900">
+        {/* LOGIN CARD */}
+        <Card className="shadow-2xl border-t-4 border-t-slate-900 dark:border-t-red-600 dark:bg-slate-900 border-x-slate-200 border-b-slate-200 dark:border-x-slate-800 dark:border-b-slate-800 transition-colors">
           <CardHeader className="space-y-1 text-center pb-6">
-            <CardTitle className="text-2xl font-bold">Admin Portal</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl font-bold dark:text-white">
+              Admin Portal
+            </CardTitle>
+            <CardDescription className="dark:text-slate-400">
               Masuk menggunakan email dan kata sandi yang terdaftar pada sistem
               Bawaslu Tegal.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">Email Administrator</Label>
+                <Label
+                  htmlFor="email"
+                  className="dark:text-slate-300 font-bold"
+                >
+                  Email Administrator
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="admin@bawaslu-tegal.go.id"
                   required
-                  className="bg-slate-50"
+                  className="bg-slate-50 dark:bg-slate-950 dark:border-slate-800 dark:text-white dark:placeholder:text-slate-600 h-12"
                 />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Kata Sandi</Label>
+                  <Label
+                    htmlFor="password"
+                    className="dark:text-slate-300 font-bold"
+                  >
+                    Kata Sandi
+                  </Label>
                   <Link
-                    href="#"
-                    className="text-xs font-medium text-red-600 hover:underline"
+                    href="/forgot-password"
+                    className="text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:underline transition-colors"
                   >
                     Lupa sandi?
                   </Link>
@@ -86,20 +103,29 @@ export default function LoginPage() {
                   id="password"
                   type="password"
                   required
-                  className="bg-slate-50"
+                  placeholder="••••••••"
+                  className="bg-slate-50 dark:bg-slate-950 dark:border-slate-800 dark:text-white h-12"
                 />
               </div>
               <Button
                 type="submit"
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white mt-6"
+                className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-red-600 dark:hover:bg-red-700 text-white mt-6 h-12 font-bold text-md transition-all active:scale-[0.98]"
                 disabled={isLoading}
               >
-                {isLoading ? "Memverifikasi..." : "Masuk ke Dashboard"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />{" "}
+                    Memverifikasi...
+                  </>
+                ) : (
+                  "Masuk ke Dashboard"
+                )}
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-center border-t p-4 bg-slate-50 text-xs text-slate-500 rounded-b-lg">
-            Sistem Informasi Bawaslu Kab. Tegal © {new Date().getFullYear()}
+          <CardFooter className="flex justify-center border-t dark:border-slate-800 p-4 bg-slate-50 dark:bg-slate-900/50 text-xs text-slate-500 dark:text-slate-400 rounded-b-lg transition-colors">
+            Sistem Informasi Bawaslu Kab. Tegal &copy;{" "}
+            {new Date().getFullYear()}
           </CardFooter>
         </Card>
       </div>

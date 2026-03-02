@@ -12,20 +12,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle2, UploadCloud, UserCircle, FileText } from "lucide-react";
+import {
+  CheckCircle2,
+  UploadCloud,
+  UserCircle,
+  FileText,
+  X,
+  Image as ImageIcon,
+  Video,
+  File as FileIcon,
+} from "lucide-react";
+
+// WAJIB DIIMPORT AGAR HALAMAN UTUH
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function LaporPage() {
-  // --- STATE: Data Pelapor ---
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
 
-  // --- STATE: Data Kejadian & Bukti ---
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [evidence, setEvidence] = useState<File | null>(null);
+  const [evidences, setEvidences] = useState<File[]>([]);
 
-  // --- STATE: UI Status ---
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedTicket, setSubmittedTicket] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -36,264 +46,347 @@ export default function LaporPage() {
     return `BWS-TGL-${year}-${randomStr}`;
   };
 
-  // Handler untuk menangkap file yang diunggah
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setEvidence(e.target.files[0]);
+      const newFiles = Array.from(e.target.files);
+      setEvidences((prev) => [...prev, ...newFiles]);
     }
+    e.target.value = "";
+  };
+
+  const removeEvidence = (indexToRemove: number) => {
+    setEvidences((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (evidences.length === 0) {
+      setErrorMsg("Mohon unggah minimal 1 (satu) file bukti kejadian.");
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg(null);
 
-    // CATATAN UNTUK TIM BACKEND NANTINYA:
-    // Karena ada file gambar/video, pengiriman data harus menggunakan FormData:
-    // const formData = new FormData();
-    // formData.append("fullName", fullName);
-    // formData.append("address", address);
-    // formData.append("email", email);
-    // formData.append("category", category);
-    // formData.append("description", description);
-    // if (evidence) formData.append("evidence", evidence);
-
-    // SIMULASI API / BACKEND CALL
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmittedTicket(generateTicketCode());
-    }, 2000); // Simulasi loading 2 detik untuk efek upload file
+    }, 2000);
   };
 
-  // Tampilan Jika Laporan Berhasil Dikirim
+  // TAMPILAN JIKA LAPORAN BERHASIL DIKIRIM
   if (submittedTicket) {
     return (
-      <div className="container mx-auto py-10 max-w-2xl px-4 min-h-[70vh]">
-        <Card className="shadow-lg border-t-4 border-t-green-600 text-center py-8 animate-in fade-in zoom-in duration-500">
-          <CardHeader>
-            <div className="mx-auto w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-            <CardTitle className="text-2xl font-bold">
-              Laporan Berhasil Terkirim!
-            </CardTitle>
-            <CardDescription className="text-lg mt-2">
-              Terima kasih, <strong>{fullName}</strong>. Laporan dan bukti Anda
-              telah masuk ke sistem Bawaslu Kabupaten Tegal.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-slate-50 border border-slate-100 p-6 rounded-lg my-4">
-              <p className="text-sm text-slate-500 mb-2">Nomor Tiket Anda:</p>
-              <p className="text-3xl font-mono font-bold tracking-wider text-red-600">
-                {submittedTicket}
-              </p>
-            </div>
-            <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-              Simpan nomor tiket ini untuk mengecek status laporan Anda. Kami
-              juga telah mengirimkan salinan tiket ini ke email:{" "}
-              <strong className="text-slate-800">{email}</strong>
-            </p>
-            <Button
-              onClick={() => window.location.reload()}
-              variant="outline"
-              className="w-full h-12 text-md font-medium"
-            >
-              Buat Laporan Baru
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center py-10 px-4">
+          <div className="w-full max-w-2xl">
+            <Card className="shadow-lg border-t-4 border-t-green-600 dark:border-t-green-500 text-center py-8 animate-in fade-in zoom-in duration-500 dark:bg-slate-900 dark:border-slate-800">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-500 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-10 h-10" />
+                </div>
+                <CardTitle className="text-2xl font-bold dark:text-white">
+                  Laporan Berhasil Terkirim!
+                </CardTitle>
+                <CardDescription className="text-lg mt-2 dark:text-slate-400">
+                  Terima kasih,{" "}
+                  <strong className="dark:text-white">{fullName}</strong>.
+                  Laporan dan {evidences.length} file bukti Anda telah masuk ke
+                  sistem Bawaslu Kabupaten Tegal.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 p-6 rounded-lg my-4">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                    Nomor Tiket Anda:
+                  </p>
+                  <p className="text-3xl font-mono font-bold tracking-wider text-red-600 dark:text-red-500">
+                    {submittedTicket}
+                  </p>
+                </div>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                  Simpan nomor tiket ini untuk mengecek status laporan Anda.
+                  Kami juga telah mengirimkan salinan tiket ini ke email:{" "}
+                  <strong className="text-slate-800 dark:text-slate-200">
+                    {email}
+                  </strong>
+                </p>
+                <Button
+                  onClick={() => window.location.reload()}
+                  variant="outline"
+                  className="w-full h-12 text-md font-medium dark:bg-slate-900 dark:border-slate-700 dark:hover:bg-slate-800"
+                >
+                  Buat Laporan Baru
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
-  // Tampilan Form Pelaporan
+  // TAMPILAN FORM PELAPORAN
   return (
-    <div className="container mx-auto py-10 max-w-3xl px-4">
-      <Card className="shadow-xl border-t-4 border-t-red-600">
-        <CardHeader className="bg-slate-50/50 border-b pb-6">
-          <CardTitle className="text-2xl font-bold text-slate-900">
-            Formulir Pelaporan Pelanggaran
-          </CardTitle>
-          <CardDescription className="text-base">
-            Bawaslu Kabupaten Tegal. Identitas Anda akan dilindungi secara
-            hukum. Silakan isi data diri dan kejadian dengan valid dan
-            sebenar-benarnya.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
-          {errorMsg && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-md mb-6 text-sm font-medium border border-red-200">
-              {errorMsg}
-            </div>
-          )}
+    // BUNGKUS UTAMA: Ini yang memastikan background tidak putih!
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+      <Navbar />
 
-          <form onSubmit={handleSubmit} className="space-y-10">
-            {/* --- BAGIAN 1: IDENTITAS PELAPOR --- */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 border-b pb-2">
-                <UserCircle className="w-5 h-5 text-red-600" />
-                <h3 className="text-lg font-semibold text-slate-800">
-                  1. Identitas Pelapor
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">
-                    Nama Lengkap Sesuai KTP{" "}
-                    <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="fullName"
-                    placeholder="Contoh: Budi Santoso"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
+      <main className="flex-1 py-12">
+        <div className="container mx-auto max-w-3xl px-4">
+          <Card className="shadow-xl border-t-4 border-t-red-600 dark:border-t-red-500 dark:bg-slate-900 dark:border-slate-800 transition-colors duration-300">
+            <CardHeader className="bg-slate-50/50 dark:bg-slate-950/50 border-b dark:border-slate-800 pb-6 transition-colors duration-300">
+              <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+                Formulir Pelaporan Pelanggaran
+              </CardTitle>
+              <CardDescription className="text-base dark:text-slate-400">
+                Bawaslu Kabupaten Tegal. Identitas Anda akan dilindungi secara
+                hukum. Silakan isi data diri dan kejadian dengan valid dan
+                sebenar-benarnya.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              {errorMsg && (
+                <div className="bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-500 p-3 rounded-md mb-6 text-sm font-medium border border-red-200 dark:border-red-500/20 animate-in fade-in transition-colors duration-300">
+                  {errorMsg}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">
-                    Email Aktif <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="budi@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-10">
+                {/* --- BAGIAN 1: IDENTITAS PELAPOR --- */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 border-b dark:border-slate-800 pb-2">
+                    <UserCircle className="w-5 h-5 text-red-600 dark:text-red-500" />
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                      1. Identitas Pelapor
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="fullName" className="dark:text-slate-300">
+                        Nama Lengkap Sesuai KTP{" "}
+                        <span className="text-red-500 dark:text-red-400">
+                          *
+                        </span>
+                      </Label>
+                      <Input
+                        id="fullName"
+                        placeholder="Contoh: Budi Santoso"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                        className="dark:bg-slate-950 dark:border-slate-800"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="dark:text-slate-300">
+                        Email Aktif{" "}
+                        <span className="text-red-500 dark:text-red-400">
+                          *
+                        </span>
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="budi@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="dark:bg-slate-950 dark:border-slate-800"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="address" className="dark:text-slate-300">
+                      Alamat Lengkap Sesuai KTP{" "}
+                      <span className="text-red-500 dark:text-red-400">*</span>
+                    </Label>
+                    <Textarea
+                      id="address"
+                      placeholder="Nama Jalan, RT/RW, Desa/Kelurahan, Kecamatan..."
+                      className="min-h-[80px] dark:bg-slate-950 dark:border-slate-800"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="address">
-                  Alamat Lengkap Sesuai KTP{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <Textarea
-                  id="address"
-                  placeholder="Nama Jalan, RT/RW, Desa/Kelurahan, Kecamatan..."
-                  className="min-h-[80px]"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+                {/* --- BAGIAN 2: DATA KEJADIAN & BUKTI --- */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 border-b dark:border-slate-800 pb-2">
+                    <FileText className="w-5 h-5 text-red-600 dark:text-red-500" />
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+                      2. Data Kejadian & Bukti
+                    </h3>
+                  </div>
 
-            {/* --- BAGIAN 2: DATA KEJADIAN & BUKTI --- */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 border-b pb-2">
-                <FileText className="w-5 h-5 text-red-600" />
-                <h3 className="text-lg font-semibold text-slate-800">
-                  2. Data Kejadian & Bukti
-                </h3>
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="category" className="dark:text-slate-300">
+                      Jenis Dugaan Pelanggaran{" "}
+                      <span className="text-red-500 dark:text-red-400">*</span>
+                    </Label>
+                    <select
+                      id="category"
+                      className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-400 focus:border-transparent dark:text-slate-200 transition-colors duration-300"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      required
+                    >
+                      <option value="" disabled>
+                        -- Pilih Kategori Pelanggaran --
+                      </option>
+                      <option value="politik_uang">
+                        Politik Uang (Money Politic)
+                      </option>
+                      <option value="netralitas_asn">
+                        Netralitas ASN / TNI / Polri
+                      </option>
+                      <option value="kampanye_hitam">
+                        Kampanye Hitam / Hoax / SARA
+                      </option>
+                      <option value="administrasi">
+                        Pelanggaran Administrasi Pemilu
+                      </option>
+                      <option value="lainnya">Pelanggaran Lainnya</option>
+                    </select>
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="category">
-                  Jenis Dugaan Pelanggaran{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <select
-                  id="category"
-                  className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  required
-                >
-                  <option value="" disabled>
-                    -- Pilih Kategori Pelanggaran --
-                  </option>
-                  <option value="politik_uang">
-                    Politik Uang (Money Politic)
-                  </option>
-                  <option value="netralitas_asn">
-                    Netralitas ASN / TNI / Polri
-                  </option>
-                  <option value="kampanye_hitam">
-                    Kampanye Hitam / Hoax / SARA
-                  </option>
-                  <option value="administrasi">
-                    Pelanggaran Administrasi Pemilu
-                  </option>
-                  <option value="lainnya">Pelanggaran Lainnya</option>
-                </select>
-              </div>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="description"
+                      className="dark:text-slate-300"
+                    >
+                      Uraian Kejadian (Kronologi){" "}
+                      <span className="text-red-500 dark:text-red-400">*</span>
+                    </Label>
+                    <Textarea
+                      id="description"
+                      placeholder="Jelaskan secara detail: APA yang terjadi, SIAPA yang terlibat, KAPAN dan DI MANA kejadiannya..."
+                      className="min-h-[150px] leading-relaxed dark:bg-slate-950 dark:border-slate-800"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">
-                  Uraian Kejadian (Kronologi){" "}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <Textarea
-                  id="description"
-                  placeholder="Jelaskan secara detail: APA yang terjadi, SIAPA yang terlibat, KAPAN dan DI MANA kejadiannya..."
-                  className="min-h-[150px] leading-relaxed"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                />
-                <p className="text-xs text-slate-500">
-                  Gunakan prinsip 5W+1H agar laporan mudah diproses oleh tim
-                  kami.
-                </p>
-              </div>
+                  {/* INPUT BANYAK FILE BUKTI & PREVIEW */}
+                  <div className="space-y-4 border dark:border-slate-800 rounded-xl p-5 bg-slate-50/50 dark:bg-slate-950/50 transition-colors duration-300">
+                    <div className="flex justify-between items-center">
+                      <Label
+                        htmlFor="evidence"
+                        className="text-base dark:text-slate-200"
+                      >
+                        Unggah Bukti Pendukung{" "}
+                        <span className="text-red-500 dark:text-red-400">
+                          *
+                        </span>
+                      </Label>
+                      <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded-md">
+                        {evidences.length} File Dipilih
+                      </span>
+                    </div>
 
-              {/* INPUT FILE BUKTI */}
-              <div className="space-y-2">
-                <Label htmlFor="evidence">
-                  Unggah Bukti (Foto / Video / Dokumen){" "}
-                  <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative flex flex-col items-center justify-center w-full p-6 border-2 border-slate-300 border-dashed rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer group">
-                  <UploadCloud className="w-8 h-8 text-slate-400 group-hover:text-red-500 transition-colors mb-2" />
-                  <p className="text-sm text-slate-600 text-center font-medium">
-                    {evidence
-                      ? evidence.name
-                      : "Klik atau seret file ke area ini"}
+                    <div className="relative flex flex-col items-center justify-center w-full p-6 border-2 border-slate-300 dark:border-slate-700 border-dashed rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
+                      <UploadCloud className="w-8 h-8 text-slate-400 dark:text-slate-500 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors mb-2" />
+                      <p className="text-sm text-slate-600 dark:text-slate-400 text-center font-medium">
+                        Klik atau seret file ke area ini
+                      </p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 text-center">
+                        Bisa pilih lebih dari satu. (JPG, PNG, MP4, PDF)
+                      </p>
+                      <Input
+                        id="evidence"
+                        type="file"
+                        multiple
+                        accept="image/*,video/*,application/pdf,.doc,.docx"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+
+                    {/* Grid Preview File */}
+                    {evidences.length > 0 && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                        {evidences.map((file, index) => {
+                          const isImage = file.type.startsWith("image/");
+                          const isVideo = file.type.startsWith("video/");
+
+                          return (
+                            <div
+                              key={index}
+                              className="relative group flex flex-col items-center justify-center p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 shadow-sm overflow-hidden animate-in fade-in zoom-in duration-200"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => removeEvidence(index)}
+                                className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full z-10 opacity-80 hover:opacity-100 transition-opacity"
+                                title="Hapus file"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+
+                              <div className="w-full h-24 flex items-center justify-center bg-slate-100 dark:bg-slate-900 rounded-md mb-2 overflow-hidden">
+                                {isImage ? (
+                                  <img
+                                    src={URL.createObjectURL(file)}
+                                    alt={file.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : isVideo ? (
+                                  <Video className="w-8 h-8 text-indigo-400 dark:text-indigo-500" />
+                                ) : (
+                                  <FileIcon className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+                                )}
+                              </div>
+
+                              <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium truncate w-full text-center px-1">
+                                {file.name}
+                              </p>
+                              <p className="text-[9px] text-slate-400 dark:text-slate-500">
+                                {(file.size / 1024 / 1024).toFixed(2)} MB
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* --- TOMBOL SUBMIT --- */}
+                <div className="pt-4 border-t dark:border-slate-800">
+                  <Button
+                    type="submit"
+                    className="w-full h-14 text-lg font-bold bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white transition-all shadow-md hover:shadow-lg"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        Mengunggah Laporan & Bukti...
+                      </span>
+                    ) : (
+                      "Kirim Laporan Resmi"
+                    )}
+                  </Button>
+                  <p className="text-xs text-center text-slate-500 dark:text-slate-400 mt-4">
+                    Dengan menekan tombol di atas, Anda menyatakan bahwa data
+                    yang diberikan adalah benar dan dapat dipertanggungjawabkan.
                   </p>
-                  <p className="text-xs text-slate-400 mt-1 text-center">
-                    Maks. 20MB. Format didukung: JPG, PNG, MP4, PDF.
-                  </p>
-                  <Input
-                    id="evidence"
-                    type="file"
-                    accept="image/*,video/*,application/pdf,.doc,.docx"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleFileChange}
-                    required
-                  />
                 </div>
-              </div>
-            </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
 
-            {/* --- TOMBOL SUBMIT --- */}
-            <div className="pt-4">
-              <Button
-                type="submit"
-                className="w-full h-14 text-lg font-bold bg-red-600 hover:bg-red-700 text-white transition-all shadow-md hover:shadow-lg"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                    Mengunggah Data & File...
-                  </span>
-                ) : (
-                  "Kirim Laporan Resmi"
-                )}
-              </Button>
-              <p className="text-xs text-center text-slate-500 mt-4">
-                Dengan menekan tombol di atas, Anda menyatakan bahwa data yang
-                diberikan adalah benar dan dapat dipertanggungjawabkan.
-              </p>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+      <Footer />
     </div>
   );
 }

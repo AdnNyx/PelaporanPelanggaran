@@ -7,36 +7,44 @@ import {
   Lock,
   Clock,
   CheckCircle,
+  AlertTriangle,
+  ArrowRight,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PublicCharts from "@/components/charts/PublicChart";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-500 selection:bg-red-500 selection:text-white">
       <Navbar />
 
-      {/* KONTEN UTAMA BERANDA */}
       <main className="flex-1">
-        <section className="relative pt-20 pb-32 overflow-hidden border-b bg-[url('/images/bawaslu.png')] bg-cover bg-center bg-no-repeat">
-          <div className="absolute inset-0 bg-white/50 z-0"></div>
+        {/* =========================================
+            1. HERO SECTION 
+            ========================================= */}
+        <section className="relative pt-24 pb-40 overflow-hidden border-b dark:border-slate-800 bg-[url('/images/bawaslu.png')] bg-cover bg-center bg-no-repeat group">
+          <div className="absolute inset-0 bg-white/70 dark:bg-slate-950/80 backdrop-blur-[2px] transition-all duration-1000 group-hover:backdrop-blur-sm z-0"></div>
 
-          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-40 z-0"></div>
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-red-600/10 dark:bg-red-600/20 blur-[100px] rounded-full pointer-events-none z-0"></div>
 
-          <div className="container relative mx-auto px-4 text-center z-10">
-            <div className="inline-flex items-center rounded-full border border-red-200 bg-white/80 px-4 py-1.5 text-sm text-red-700 mb-8 font-medium shadow-sm backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-red-600 mr-2 animate-pulse"></span>
+          <div className="container relative mx-auto px-4 text-center z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <div className="inline-flex items-center rounded-full border border-red-200/60 dark:border-red-500/30 bg-white/90 dark:bg-slate-900/80 px-5 py-2 text-sm text-red-700 dark:text-red-400 mb-8 font-semibold shadow-sm backdrop-blur-md hover:scale-105 transition-all duration-300 cursor-default">
+              <span className="relative flex h-2.5 w-2.5 mr-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600 dark:bg-red-500"></span>
+              </span>
               Si-Walu: Sistem Pelaporan Pelanggaran Pemilu Terpadu
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 max-w-5xl mx-auto leading-tight">
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 max-w-5xl mx-auto leading-tight transition-colors duration-500">
               Kawal Demokrasi <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-red-800 dark:from-red-500 dark:via-red-400 dark:to-red-700 animate-gradient-x">
                 Bersama Bawaslu Tegal
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-800 mb-10 max-w-2xl mx-auto leading-relaxed font-semibold drop-shadow-sm">
+            <p className="text-lg md:text-xl text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto leading-relaxed font-medium drop-shadow-sm transition-colors duration-500">
               Temukan dugaan pelanggaran pemilu? Jangan diam. Laporkan secara
               online dengan mudah, aman, dan pantau tindak lanjutnya secara
               real-time.
@@ -46,17 +54,18 @@ export default function HomePage() {
               <Link href="/lapor" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="w-full text-base h-14 px-8 bg-red-600 hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all rounded-full"
+                  className="w-full text-base h-14 px-8 bg-red-600 hover:bg-red-700 text-white shadow-xl hover:shadow-red-600/25 transition-all duration-300 rounded-full group/btn"
                 >
                   <FileText className="w-5 h-5 mr-2" />
                   Buat Laporan Sekarang
+                  <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all duration-300" />
                 </Button>
               </Link>
               <Link href="/tracking" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full text-base h-14 px-8 border-2 border-slate-300 hover:border-slate-400 bg-white text-slate-800 rounded-full shadow-sm"
+                  className="w-full text-base h-14 px-8 border-2 border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-500 bg-white/90 dark:bg-slate-900/90 hover:bg-slate-900 dark:hover:bg-slate-800 hover:text-white dark:hover:text-white text-slate-800 dark:text-slate-200 rounded-full shadow-sm backdrop-blur-md transition-all duration-300"
                 >
                   <Search className="w-5 h-5 mr-2" />
                   Cek Status Laporan
@@ -64,155 +73,232 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-        </section>
 
-        <section className="py-16 bg-slate-900 text-white relative z-10">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-sm font-semibold text-red-500 uppercase tracking-wider">
-                Transparansi Publik
-              </h2>
-              <p className="text-3xl font-bold mt-2">
-                Data Penanganan Pelanggaran 2026
-              </p>
-            </div>
+          {/* RUNNING TEXT (Sudah Support Dark Mode) */}
+          <div className="absolute bottom-0 left-0 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg border-t border-slate-200/50 dark:border-slate-800/80 py-3.5 flex overflow-hidden z-20 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] transition-colors duration-500">
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+              @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              .animate-marquee {
+                display: inline-flex;
+                white-space: nowrap;
+                animation: marquee 40s linear infinite;
+              }
+              .animate-marquee:hover {
+                animation-play-state: paused;
+              }
+            `,
+              }}
+            />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-slate-800">
-              <div className="px-4">
-                <div className="text-4xl font-extrabold text-white mb-2">
-                  124
+            <div className="animate-marquee cursor-pointer">
+              {[...Array(2)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-10 px-4 font-semibold text-sm tracking-wide text-slate-700 dark:text-slate-300"
+                >
+                  <span className="flex items-center gap-2 hover:text-red-700 dark:hover:text-red-400 transition-colors">
+                    <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-500" />
+                    <span className="text-red-700 dark:text-red-500 font-bold">
+                      Tolak Politik Uang!
+                    </span>{" "}
+                    Laporkan jika Anda melihat praktik bagi-bagi amplop atau
+                    sembako.
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">|</span>
+
+                  <span className="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                    Jaga{" "}
+                    <span className="text-slate-900 dark:text-white font-bold">
+                      Netralitas ASN, TNI, dan Polri
+                    </span>{" "}
+                    dalam Pemilu dan Pilkada.
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">|</span>
+
+                  <span className="flex items-center gap-2 hover:text-green-700 dark:hover:text-green-400 transition-colors">
+                    <ShieldCheck className="w-4 h-4 text-green-600 dark:text-green-500" />
+                    Jangan takut melapor.{" "}
+                    <span className="text-slate-900 dark:text-white font-bold">
+                      Identitas pelapor dilindungi sepenuhnya oleh
+                      Undang-Undang!
+                    </span>
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">|</span>
                 </div>
-                <div className="text-slate-400 text-sm font-medium">
-                  Laporan Masuk
-                </div>
-              </div>
-              <div className="px-4">
-                <div className="text-4xl font-extrabold text-blue-400 mb-2">
-                  18
-                </div>
-                <div className="text-slate-400 text-sm font-medium">
-                  Sedang Diverifikasi
-                </div>
-              </div>
-              <div className="px-4">
-                <div className="text-4xl font-extrabold text-yellow-400 mb-2">
-                  8
-                </div>
-                <div className="text-slate-400 text-sm font-medium">
-                  Proses Kajian
-                </div>
-              </div>
-              <div className="px-4">
-                <div className="text-4xl font-extrabold text-green-400 mb-2">
-                  92
-                </div>
-                <div className="text-slate-400 text-sm font-medium">
-                  Selesai Ditindak
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="py-24 bg-slate-50">
+        {/* 2. STATISTIK TRANSPARANSI */}
+        <section className="py-20 bg-slate-900 dark:bg-black text-white relative z-10 transition-colors duration-500">
           <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+            <div className="text-center mb-12">
+              <h2 className="text-sm font-bold text-red-500 uppercase tracking-widest bg-red-500/10 inline-block px-4 py-1.5 rounded-full mb-4">
+                Transparansi Publik
+              </h2>
+              <p className="text-3xl md:text-4xl font-extrabold mt-2">
+                Data Penanganan Pelanggaran 2026
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:-translate-y-2 transition-all duration-300">
+                <div className="text-5xl font-black text-white mb-3">124</div>
+                <div className="text-slate-400 text-sm font-semibold uppercase tracking-wider">
+                  Laporan Masuk
+                </div>
+              </div>
+              <div className="p-6 rounded-2xl bg-white/5 border border-blue-500/20 hover:bg-blue-500/10 hover:-translate-y-2 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                <div className="text-5xl font-black text-blue-400 mb-3">18</div>
+                <div className="text-slate-400 text-sm font-semibold uppercase tracking-wider">
+                  Diverifikasi
+                </div>
+              </div>
+              <div className="p-6 rounded-2xl bg-white/5 border border-yellow-500/20 hover:bg-yellow-500/10 hover:-translate-y-2 transition-all duration-300 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                <div className="text-5xl font-black text-yellow-400 mb-3">
+                  8
+                </div>
+                <div className="text-slate-400 text-sm font-semibold uppercase tracking-wider">
+                  Proses Kajian
+                </div>
+              </div>
+              <div className="p-6 rounded-2xl bg-white/5 border border-green-500/20 hover:bg-green-500/10 hover:-translate-y-2 transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+                <div className="text-5xl font-black text-green-400 mb-3">
+                  92
+                </div>
+                <div className="text-slate-400 text-sm font-semibold uppercase tracking-wider">
+                  Selesai
+                </div>
+              </div>
+            </div>
+            <PublicCharts />
+          </div>
+        </section>
+
+        {/* 3. ALUR PELAPORAN */}
+        <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-500">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40"></div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 transition-colors">
                 Bagaimana Cara Melapor?
               </h2>
-              <p className="text-slate-600 text-lg">
+              <p className="text-slate-600 dark:text-slate-400 text-lg transition-colors">
                 Proses pelaporan dirancang agar sangat mudah diakses oleh
                 seluruh lapisan masyarakat Kabupaten Tegal.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="relative text-center">
-                <div className="w-16 h-16 mx-auto bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6 transform rotate-3">
+              {/* STEP 1 */}
+              <div className="relative text-center group cursor-default">
+                <div className="w-20 h-20 mx-auto bg-slate-50 dark:bg-slate-900 border-2 border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-600 group-hover:text-white dark:group-hover:text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm">
                   <FileText className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   1. Isi Formulir
                 </h3>
-                <p className="text-slate-600 text-sm">
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed px-2">
                   Ceritakan kronologi kejadian secara detail dan unggah bukti
-                  foto/video pendukung.
+                  pendukung.
                 </p>
-                <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-[2px] border-t-2 border-slate-200 border-dashed"></div>
+                <div className="hidden md:block absolute top-10 left-[65%] w-[70%] h-[2px] border-t-2 border-slate-200 dark:border-slate-800 border-dashed group-hover:border-red-300 dark:group-hover:border-red-700 transition-colors duration-500"></div>
               </div>
 
-              <div className="relative text-center">
-                <div className="w-16 h-16 mx-auto bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 -transform rotate-3">
+              {/* STEP 2 */}
+              <div className="relative text-center group cursor-default">
+                <div className="w-20 h-20 mx-auto bg-slate-50 dark:bg-slate-900 border-2 border-blue-100 dark:border-blue-900/50 text-blue-600 dark:text-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white dark:group-hover:text-white group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-sm">
                   <Lock className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   2. Terima Tiket
                 </h3>
-                <p className="text-slate-600 text-sm">
-                  Sistem akan mengamankan data Anda dan memberikan Nomor Tiket
-                  unik untuk pelacakan.
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed px-2">
+                  Sistem mengamankan data Anda dan memberikan Nomor Tiket
+                  pelacakan.
                 </p>
-                <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-[2px] border-t-2 border-slate-200 border-dashed"></div>
+                <div className="hidden md:block absolute top-10 left-[65%] w-[70%] h-[2px] border-t-2 border-slate-200 dark:border-slate-800 border-dashed group-hover:border-blue-300 dark:group-hover:border-blue-700 transition-colors duration-500"></div>
               </div>
 
-              <div className="relative text-center">
-                <div className="w-16 h-16 mx-auto bg-yellow-100 text-yellow-600 rounded-2xl flex items-center justify-center mb-6 transform rotate-3">
+              {/* STEP 3 */}
+              <div className="relative text-center group cursor-default">
+                <div className="w-20 h-20 mx-auto bg-slate-50 dark:bg-slate-900 border-2 border-yellow-100 dark:border-yellow-900/50 text-yellow-600 dark:text-yellow-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-yellow-500 group-hover:text-white dark:group-hover:text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm">
                   <Clock className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   3. Verifikasi
                 </h3>
-                <p className="text-slate-600 text-sm">
-                  Tim Bawaslu akan memverifikasi syarat formil dan materiil dari
-                  laporan Anda.
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed px-2">
+                  Tim Bawaslu akan memverifikasi syarat formil dan materiil
+                  laporan.
                 </p>
-                <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-[2px] border-t-2 border-slate-200 border-dashed"></div>
+                <div className="hidden md:block absolute top-10 left-[65%] w-[70%] h-[2px] border-t-2 border-slate-200 dark:border-slate-800 border-dashed group-hover:border-yellow-300 dark:group-hover:border-yellow-700 transition-colors duration-500"></div>
               </div>
 
-              <div className="relative text-center">
-                <div className="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 -transform rotate-3">
+              {/* STEP 4 */}
+              <div className="relative text-center group cursor-default">
+                <div className="w-20 h-20 mx-auto bg-slate-50 dark:bg-slate-900 border-2 border-green-100 dark:border-green-900/50 text-green-600 dark:text-green-500 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white dark:group-hover:text-white group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-sm">
                   <CheckCircle className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   4. Tindak Lanjut
                 </h3>
-                <p className="text-slate-600 text-sm">
-                  Laporan diproses sesuai regulasi. Anda akan mendapat email
-                  notifikasi setiap ada update.
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed px-2">
+                  Laporan diproses sesuai regulasi. Anda mendapat notifikasi
+                  setiap update.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-20 bg-white">
+        {/* 4. PRIVASI */}
+        <section className="py-20 bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
           <div className="container mx-auto px-4 max-w-5xl">
-            <div className="bg-red-600 rounded-3xl p-8 md:p-12 text-white shadow-2xl overflow-hidden relative">
-              <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-                <ShieldCheck className="w-96 h-96" />
+            <div className="bg-gradient-to-br from-red-700 to-red-900 dark:from-red-900 dark:to-black rounded-[2rem] p-10 md:p-14 text-white shadow-2xl overflow-hidden relative group border border-red-800/50 dark:border-slate-800 transition-colors">
+              <div className="absolute top-0 right-0 opacity-10 dark:opacity-5 transform translate-x-1/4 -translate-y-1/4 group-hover:rotate-12 transition-transform duration-[3000ms]">
+                <ShieldCheck className="w-[400px] h-[400px]" />
               </div>
 
               <div className="relative z-10 md:w-2/3">
-                <h2 className="text-3xl font-bold mb-4">
-                  Privasi Anda Adalah Prioritas Kami
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold tracking-wider mb-6">
+                  <Lock className="w-3.5 h-3.5" /> Keamanan Sistem
+                </div>
+                <h2 className="text-3xl md:text-4xl font-extrabold mb-6 leading-tight">
+                  Privasi Anda Adalah <br /> Prioritas Kami
                 </h2>
-                <p className="text-red-100 text-lg mb-8 leading-relaxed">
+                <p className="text-red-100/90 dark:text-slate-300 text-lg mb-10 leading-relaxed font-medium">
                   Platform ini dilengkapi dengan teknologi enkripsi modern.
                   Identitas pelapor dilindungi secara hukum dan hanya digunakan
                   untuk keperluan klarifikasi internal Bawaslu.
                 </p>
-                <ul className="space-y-3 text-red-50">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 mr-3 text-red-300" />{" "}
-                    Pelaporan bisa dilakukan secara anonim (opsional).
+
+                <ul className="space-y-4 text-white/90 dark:text-slate-200">
+                  <li className="flex items-center group/list">
+                    <div className="bg-white/20 dark:bg-white/10 p-1.5 rounded-full mr-4 group-hover/list:bg-green-500 transition-colors">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    Identitas pelapor dilindungi sepenuhnya oleh Undang-Undang.
                   </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 mr-3 text-red-300" />{" "}
-                    Perlindungan data dari akses tidak sah.
+                  <li className="flex items-center group/list">
+                    <div className="bg-white/20 dark:bg-white/10 p-1.5 rounded-full mr-4 group-hover/list:bg-green-500 transition-colors">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    Perlindungan data base dari akses yang tidak sah.
                   </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 mr-3 text-red-300" /> Sesuai
-                    dengan standar keamanan e-Government.
+                  <li className="flex items-center group/list">
+                    <div className="bg-white/20 dark:bg-white/10 p-1.5 rounded-full mr-4 group-hover/list:bg-green-500 transition-colors">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    Sistem dirancang sesuai standar keamanan e-Government.
                   </li>
                 </ul>
               </div>
