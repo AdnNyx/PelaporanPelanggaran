@@ -22,8 +22,6 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setMounted(true), []);
-
-  // --- LOGIKA KLIK DI LUAR MENU ---
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -31,7 +29,6 @@ export default function Navbar() {
         menuRef.current &&
         !menuRef.current.contains(event.target as Node)
       ) {
-        // Cegah menu tertutup ganda jika yang diklik adalah tombol hamburger itu sendiri
         const isHamburger = (event.target as HTMLElement).closest(
           "#hamburger-btn",
         );
@@ -45,7 +42,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobileMenuOpen]);
 
-  // --- LOGIKA KUNCI SCROLL SAAT MENU TERBUKA ---
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -55,11 +51,9 @@ export default function Navbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    // MENGGUNAKAN FRAGMENT AGAR MENU MOBILE BISA BERADA DI LUAR HEADER
     <>
       <header className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-sm transition-colors duration-300">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          {/* --- LOGO --- */}
           <Link
             href="/"
             className="flex items-center gap-3 group relative z-50"
@@ -81,7 +75,6 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* --- MENU DESKTOP --- */}
           <div className="hidden md:flex items-center gap-8">
             <nav className="flex gap-8">
               {navItems.map((item) => {
@@ -125,7 +118,6 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* --- TOMBOL HAMBURGER & DARK MODE (MOBILE) --- */}
           <div className="flex items-center gap-2 md:hidden relative z-50">
             {mounted && (
               <button
@@ -156,14 +148,12 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* --- OVERLAY MOBILE MENU --- */}
       <div
         className={`fixed inset-0 bg-slate-900/20 dark:bg-black/50 backdrop-blur-sm z-[60] md:hidden transition-all duration-300 ${
           isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
       />
 
-      {/* --- PANEL MOBILE MENU YANG BENAR --- */}
       <div
         ref={menuRef}
         className={`fixed top-0 right-0 h-full w-[280px] bg-white dark:bg-slate-950 shadow-2xl z-[70] md:hidden flex flex-col pt-24 px-6 pb-6 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${

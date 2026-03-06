@@ -23,7 +23,6 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Karena backend belum ada, kita buat simulasi loading 1 detik
     setTimeout(() => {
       setIsLoading(false);
       // Simulasi redirect ke dashboard (nanti diganti dengan router Next.js saat diintegrasi)
@@ -32,9 +31,7 @@ export default function LoginPage() {
   };
 
   return (
-    // BUNGKUS UTAMA DENGAN DARK MODE BACKGROUND
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center p-4 transition-colors duration-500">
-      {/* Tombol kembali ke Beranda */}
       <Link
         href="/"
         className="absolute top-8 left-8 flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"

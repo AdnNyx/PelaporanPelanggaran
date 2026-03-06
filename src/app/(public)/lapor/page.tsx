@@ -22,8 +22,6 @@ import {
   Video,
   File as FileIcon,
 } from "lucide-react";
-
-// WAJIB DIIMPORT AGAR HALAMAN UTUH
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -129,9 +127,7 @@ export default function LaporPage() {
     );
   }
 
-  // TAMPILAN FORM PELAPORAN
   return (
-    // BUNGKUS UTAMA: Ini yang memastikan background tidak putih!
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       <Navbar />
 
@@ -156,7 +152,7 @@ export default function LaporPage() {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-10">
-                {/* --- BAGIAN 1: IDENTITAS PELAPOR --- */}
+                {/* IDENTITAS PELAPOR */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-2 border-b dark:border-slate-800 pb-2">
                     <UserCircle className="w-5 h-5 text-red-600 dark:text-red-500" />
@@ -217,7 +213,7 @@ export default function LaporPage() {
                   </div>
                 </div>
 
-                {/* --- BAGIAN 2: DATA KEJADIAN & BUKTI --- */}
+                {/* DATA KEJADIAN & BUKTI */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-2 border-b dark:border-slate-800 pb-2">
                     <FileText className="w-5 h-5 text-red-600 dark:text-red-500" />
@@ -275,7 +271,7 @@ export default function LaporPage() {
                     />
                   </div>
 
-                  {/* INPUT BANYAK FILE BUKTI & PREVIEW */}
+                  {/* INPUT & PREVIEW */}
                   <div className="space-y-4 border dark:border-slate-800 rounded-xl p-5 bg-slate-50/50 dark:bg-slate-950/50 transition-colors duration-300">
                     <div className="flex justify-between items-center">
                       <Label
@@ -359,7 +355,7 @@ export default function LaporPage() {
                   </div>
                 </div>
 
-                {/* --- TOMBOL SUBMIT --- */}
+                {/* SUBMIT */}
                 <div className="pt-4 border-t dark:border-slate-800">
                   <Button
                     type="submit"

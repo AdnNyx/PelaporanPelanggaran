@@ -5,9 +5,7 @@ export default function Footer() {
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800 z-10">
       <div className="container mx-auto px-4">
-        {/* BAGIAN ATAS: GRID 3 KOLOM */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-          {/* KOLOM 1: TENTANG APLIKASI */}
           <div className="space-y-4">
             <h3 className="text-white text-xl font-bold flex items-center gap-2 tracking-wide">
               <span className="text-red-600">BAWASLU</span> KAB. TEGAL
@@ -19,7 +17,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* KOLOM 2: KONTAK RESMI */}
           <div className="space-y-4">
             <h3 className="text-white text-lg font-semibold tracking-wide">
               Hubungi Kami
@@ -43,7 +40,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* KOLOM 3: TAUTAN INSTITUSI TERKAIT */}
           <div className="space-y-4">
             <h3 className="text-white text-lg font-semibold tracking-wide">
               Institusi Terkait
@@ -97,7 +93,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* BAGIAN BAWAH: COPYRIGHT & LINK ADMIN */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-slate-500 text-sm text-center md:text-left">
             <p>
@@ -106,7 +101,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Link Portal Admin Tetap Tersembunyi Rapi di Pojok Kanan */}
           <Link
             href="/login"
             className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-300 transition-colors text-xs font-medium"

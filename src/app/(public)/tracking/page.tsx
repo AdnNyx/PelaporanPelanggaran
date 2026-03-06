@@ -19,8 +19,6 @@ import {
   FileSearch,
   Loader2,
 } from "lucide-react";
-
-// WAJIB DIIMPORT UNTUK LAYOUT UTAMA
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -80,7 +78,7 @@ export default function TrackingPage() {
           "Tiket tidak ditemukan. Pastikan kode yang Anda masukkan benar (contoh: BWS-TGL-2026-X1Y2).",
         );
       }
-    }, 1500); // 1.5 Detik agar animasi loading terlihat
+    }, 1500);
   };
 
   const getStatusUI = (status: string) => {
@@ -131,11 +129,8 @@ export default function TrackingPage() {
   };
 
   return (
-    // BUNGKUS UTAMA UNTUK DARK MODE & LAYOUT
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       <Navbar />
-
-      {/* AREA KONTEN TENGAH */}
       <main className="flex-1 py-12 px-4 flex items-start justify-center">
         <div className="w-full max-w-2xl mt-10">
           {/* KARTU PENCARIAN TIKET */}
@@ -193,7 +188,7 @@ export default function TrackingPage() {
             </CardContent>
           </Card>
 
-          {/* HASIL PENCARIAN (Muncul jika ada data) */}
+          {/* HASIL PENCARIAN */}
           {reportData && (
             <Card className="shadow-lg overflow-hidden border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-900 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="bg-slate-100 dark:bg-slate-800/50 p-4 border-b dark:border-slate-700 flex items-center justify-between">
@@ -212,7 +207,7 @@ export default function TrackingPage() {
                     </p>
                   </div>
 
-                  {/* Badge Status (Dengan dukungan warna Dark Mode) */}
+                  {/* Badge Status */}
                   <div
                     className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 shadow-sm ${
                       getStatusUI(reportData.status).color

@@ -45,10 +45,17 @@ import {
   Mail,
   MapPin,
   ImageIcon,
+  ShieldCheck,
+  Filter,
+  Loader2,
+  Clock,
+  FileSearch,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
 } from "lucide-react";
 
-// --- 1. IMPORT HOOK USETOAST ---
-import { useToast } from "@/hooks/use-toast";
+import { useCustomToast } from "@/hooks/use-custom-toast";
 
 export type ReportData = {
   id: string;
@@ -106,8 +113,7 @@ const dummyReports: ReportData[] = [
 ];
 
 export default function LaporanPage() {
-  // --- 2. PANGGIL HOOK TOAST ---
-  const { toast } = useToast();
+  const { toastSuccess } = useCustomToast();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -131,22 +137,16 @@ export default function LaporanPage() {
     setIsDetailOpen(true);
   };
 
-  // --- 3. LOGIKA UPDATE DENGAN TOAST ---
   const handleSaveUpdate = () => {
     setIsUpdating(true);
-
-    // Simulasi loading 1.5 detik seolah-olah sedang menembak API Backend
     setTimeout(() => {
       setIsUpdating(false);
       setIsUpdateOpen(false);
 
-      // Panggil Notifikasi Toast Sukses
-      toast({
-        title: "✅ Status Diperbarui",
-        description: `Tiket ${selectedReport?.ticket_code} berhasil diubah menjadi ${newStatus.toUpperCase()}.`,
-      });
-
-      // (Nantinya di sini tim Backend akan melakukan proses pembaruan data asli di database)
+      toastSuccess(
+        "Status Diperbarui",
+        `Tiket ${selectedReport?.ticket_code} berhasil diubah.`,
+      );
     }, 1500);
   };
 
@@ -157,37 +157,37 @@ export default function LaporanPage() {
     switch (status) {
       case "pending":
         return (
-          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full border border-yellow-200">
-            Menunggu
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-500 border border-amber-200 dark:border-amber-500/20 text-xs font-bold rounded-full">
+            <Clock className="w-3.5 h-3.5" /> Menunggu
           </span>
         );
       case "verifikasi":
         return (
-          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full border border-blue-200">
-            Verifikasi
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20 text-xs font-bold rounded-full">
+            <FileSearch className="w-3.5 h-3.5" /> Verifikasi
           </span>
         );
       case "proses":
         return (
-          <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full border border-indigo-200">
-            Proses Kajian
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-100 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20 text-xs font-bold rounded-full">
+            <Search className="w-3.5 h-3.5" /> Proses Kajian
           </span>
         );
       case "selesai":
         return (
-          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full border border-green-200">
-            Selesai
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-500 border border-emerald-200 dark:border-emerald-500/20 text-xs font-bold rounded-full">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Selesai
           </span>
         );
       case "ditolak":
         return (
-          <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded-full border border-red-200">
-            Ditolak
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-rose-100 dark:bg-rose-500/10 text-rose-700 dark:text-rose-500 border border-rose-200 dark:border-rose-500/20 text-xs font-bold rounded-full">
+            <AlertCircle className="w-3.5 h-3.5" /> Ditolak
           </span>
         );
       default:
         return (
-          <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">
+          <span className="inline-flex items-center px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-full">
             Unknown
           </span>
         );
@@ -199,39 +199,62 @@ export default function LaporanPage() {
   );
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* HEADER & PENCARIAN */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-8 max-w-7xl mx-auto animate-in fade-in duration-700">
+      {/* 1. HEADER PAGE */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 bg-white dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800/60 shadow-sm backdrop-blur-xl">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            Manajemen Laporan Masuk
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500/20 to-blue-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-3">
+            <ShieldCheck className="w-3.5 h-3.5" /> Security Panel
+          </div>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+            Manajemen Laporan
           </h1>
-          <p className="text-slate-500 mt-1">
-            Kelola, verifikasi, dan perbarui status laporan dari masyarakat.
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium text-sm">
+            Verifikasi dan perbarui status laporan pengaduan masyarakat.
           </p>
         </div>
-        <div className="relative w-full md:w-72">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
-          <Input
-            type="text"
-            placeholder="Cari Nomor Tiket..."
-            className="pl-9 bg-white"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+
+        {/* INPUT PENCARIAN */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:w-80">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="Cari ID Tiket..."
+              className="pl-10 bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 h-12 rounded-xl focus:ring-indigo-500 font-mono text-sm shadow-inner"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <Button
+            variant="outline"
+            className="h-12 w-12 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
+          >
+            <Filter className="h-4 w-4 text-slate-600 dark:text-slate-300" />
+          </Button>
         </div>
       </div>
 
-      {/* TABEL DATA */}
-      <div className="bg-white border rounded-lg shadow-sm overflow-hidden">
+      {/* 2. TABEL DATA */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-lg overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow>
-              <TableHead className="w-[120px]">Tanggal</TableHead>
-              <TableHead>No. Tiket</TableHead>
-              <TableHead>Kategori</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Aksi</TableHead>
+          <TableHeader className="bg-slate-50/80 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="font-bold py-5 pl-6 text-slate-600 dark:text-slate-300">
+                Tanggal Masuk
+              </TableHead>
+              <TableHead className="font-bold text-slate-600 dark:text-slate-300">
+                No. Tiket
+              </TableHead>
+              <TableHead className="font-bold text-slate-600 dark:text-slate-300">
+                Kategori
+              </TableHead>
+              <TableHead className="font-bold text-slate-600 dark:text-slate-300">
+                Status
+              </TableHead>
+              <TableHead className="text-right font-bold pr-6 text-slate-600 dark:text-slate-300">
+                Tindakan
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -239,48 +262,61 @@ export default function LaporanPage() {
               filteredReports.map((report) => (
                 <TableRow
                   key={report.id}
-                  className="hover:bg-slate-50 transition-colors"
+                  className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors border-b border-slate-50 dark:border-slate-800/50"
                 >
-                  <TableCell className="text-slate-500 text-sm">
-                    {new Date(report.date).toLocaleDateString("id-ID")}
+                  <TableCell className="py-5 pl-6">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold text-slate-900 dark:text-slate-200">
+                        {new Date(report.date).toLocaleDateString("id-ID", {
+                          day: "2-digit",
+                          month: "short",
+                        })}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-medium mt-0.5">
+                        {new Date(report.date).toLocaleTimeString("id-ID", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}{" "}
+                        WIB
+                      </span>
+                    </div>
                   </TableCell>
-                  <TableCell className="font-mono font-medium text-slate-900">
-                    {report.ticket_code}
+                  <TableCell>
+                    <code className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 rounded-md font-mono font-bold text-xs tracking-wider">
+                      {report.ticket_code}
+                    </code>
                   </TableCell>
-                  <TableCell className="text-sm">
+                  <TableCell className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     {formatCategory(report.category)}
                   </TableCell>
                   <TableCell>{getStatusBadge(report.status)}</TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="text-right pr-6 space-x-2">
                     <Button
                       onClick={() => handleOpenDetail(report)}
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
-                      className="h-8 px-2 text-slate-600 hover:text-slate-900"
+                      className="h-9 px-3 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
-                      <Eye className="h-4 w-4 mr-1" /> Detail
+                      <Eye className="h-4 w-4 mr-2" /> Detail
                     </Button>
-
                     <Button
                       onClick={() => handleOpenUpdate(report)}
-                      variant="default"
                       size="sm"
-                      className="h-8 px-2 bg-slate-900 hover:bg-slate-800"
+                      className="h-9 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-bold transition-transform active:scale-95"
                     >
-                      <Edit className="h-4 w-4 mr-1" /> Update
+                      <Edit className="h-4 w-4 mr-2" /> Update
                     </Button>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="h-32 text-center text-slate-500"
-                >
-                  <div className="flex flex-col items-center justify-center">
-                    <Search className="w-8 h-8 text-slate-300 mb-2" />
-                    <p>Tidak ada data laporan ditemukan.</p>
+                <TableCell colSpan={5} className="h-40 text-center">
+                  <div className="flex flex-col items-center justify-center text-slate-400">
+                    <Search className="w-10 h-10 mb-3 opacity-20" />
+                    <p className="text-sm font-medium">
+                      Tiket tidak ditemukan.
+                    </p>
                   </div>
                 </TableCell>
               </TableRow>
@@ -289,121 +325,120 @@ export default function LaporanPage() {
         </Table>
       </div>
 
-      {/* PANEL GESER (SHEET) UNTUK PREVIEW DETAIL LAPORAN */}
+      {/* 3. SLIDE-OUT PANEL */}
       <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <SheetContent
-          className="sm:max-w-[600px] h-full overflow-y-auto"
+          className="sm:max-w-[600px] h-full overflow-y-auto bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 p-0"
           data-lenis-prevent="true"
         >
-          <SheetHeader className="mb-6">
-            <SheetTitle className="text-2xl font-bold flex items-center gap-2">
-              <span className="font-mono text-red-600">
-                {selectedReport?.ticket_code}
-              </span>
-            </SheetTitle>
-            <SheetDescription>
-              Rincian lengkap dari laporan yang diajukan oleh masyarakat.
-            </SheetDescription>
+          <SheetHeader className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 sticky top-0 z-10 backdrop-blur-md text-left">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-indigo-100 dark:bg-indigo-500/20 rounded-2xl">
+                <FileText className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+              </div>
+              <div>
+                <SheetTitle className="text-2xl font-black text-slate-900 dark:text-white">
+                  Rincian Laporan
+                </SheetTitle>
+                <SheetDescription className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-xs mt-1 tracking-widest">
+                  ID: {selectedReport?.ticket_code}
+                </SheetDescription>
+              </div>
+            </div>
           </SheetHeader>
 
           {selectedReport && (
-            <div className="space-y-6 pb-8">
-              {/* Info Status & Kategori */}
-              <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg border">
-                <div>
-                  <Label className="text-xs text-slate-500 block mb-1">
+            <div className="p-6 space-y-8">
+              {/* Grid Info Cepat */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">
                     Status Saat Ini
                   </Label>
                   {getStatusBadge(selectedReport.status)}
                 </div>
-                <div className="border-l pl-4">
-                  <Label className="text-xs text-slate-500 block mb-1 flex items-center gap-1">
-                    <Tag className="w-3 h-3" /> Kategori
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" /> Masuk Pada
                   </Label>
-                  <p className="font-medium text-sm capitalize">
-                    {formatCategory(selectedReport.category)}
-                  </p>
-                </div>
-                <div className="border-l pl-4">
-                  <Label className="text-xs text-slate-500 block mb-1 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" /> Tanggal Masuk
-                  </Label>
-                  <p className="font-medium text-sm">
-                    {new Date(selectedReport.date).toLocaleDateString("id-ID")}
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-200">
+                    {new Date(selectedReport.date).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
               </div>
 
               {/* Data Pelapor */}
-              <div>
-                <Label className="text-xs text-slate-500 uppercase tracking-wider mb-2 block font-semibold">
-                  1. Identitas Pelapor
-                </Label>
-                <div className="space-y-3 bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-start gap-3">
-                    <User className="w-4 h-4 text-slate-400 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-slate-500">Nama Lengkap</p>
-                      <p className="text-sm font-medium text-slate-900">
-                        {selectedReport.reporter_name}
-                      </p>
-                    </div>
+              <div className="space-y-4">
+                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                  <User className="w-4 h-4" /> 1. Identitas Pelapor
+                </h4>
+                <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-950 shadow-sm">
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Nama Lengkap
+                    </p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      {selectedReport.reporter_name}
+                    </p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-4 h-4 text-slate-400 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-slate-500">Email Kontak</p>
-                      <p className="text-sm font-medium text-slate-900">
-                        {selectedReport.reporter_email}
-                      </p>
-                    </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                      <Mail className="w-3 h-3" /> Email Kontak
+                    </p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      {selectedReport.reporter_email}
+                    </p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-4 h-4 text-slate-400 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-slate-500">Alamat</p>
-                      <p className="text-sm font-medium text-slate-900">
-                        {selectedReport.reporter_address}
-                      </p>
-                    </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" /> Alamat
+                    </p>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+                      {selectedReport.reporter_address}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Kronologi */}
-              <div>
-                <Label className="text-xs text-slate-500 uppercase tracking-wider mb-2 block font-semibold">
-                  2. Uraian Kejadian
-                </Label>
-                <div className="bg-white border rounded-lg p-4 text-sm leading-relaxed text-slate-700 shadow-sm whitespace-pre-wrap">
-                  {selectedReport.description}
+              <div className="space-y-4">
+                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                  <Tag className="w-4 h-4" /> 2. Uraian Kejadian
+                </h4>
+                <div className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-500/5 border border-amber-100 dark:border-amber-500/10">
+                  <div className="inline-block px-2.5 py-1 bg-amber-200/50 dark:bg-amber-500/20 text-amber-800 dark:text-amber-500 text-[10px] font-bold uppercase rounded-md mb-3">
+                    Kategori: {formatCategory(selectedReport.category)}
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-800 dark:text-slate-300 font-medium italic">
+                    &quot;{selectedReport.description}&quot;
+                  </p>
                 </div>
               </div>
 
               {/* Bukti Lampiran */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-xs text-slate-500 uppercase tracking-wider block font-semibold">
-                    3. Bukti Lampiran
-                  </Label>
-                  <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                    {selectedReport.evidence_count} File Terlampir
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4" /> 3. Bukti Lampiran
+                  </h4>
+                  <span className="text-[10px] font-black px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full">
+                    {selectedReport.evidence_count} FILES
                   </span>
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                   {Array.from({ length: selectedReport.evidence_count }).map(
                     (_, idx) => (
                       <div
                         key={idx}
-                        className="border-2 border-dashed border-slate-200 rounded-lg p-4 flex flex-col items-center justify-center text-slate-400 bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer group"
+                        className="group flex flex-col items-center justify-center p-4 h-28 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors cursor-pointer"
                       >
-                        <ImageIcon className="w-6 h-6 mb-2 opacity-50 group-hover:text-red-500 transition-colors" />
-                        <p className="text-xs text-center font-medium">
+                        <ImageIcon className="w-8 h-8 mb-2 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 transition-colors" />
+                        <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Bukti_{idx + 1}.jpg
-                        </p>
-                        <p className="text-[10px] mt-1 text-center">
-                          Klik untuk unduh
                         </p>
                       </div>
                     ),
@@ -413,99 +448,112 @@ export default function LaporanPage() {
             </div>
           )}
 
-          <div className="mt-4 pt-6 border-t flex flex-col sm:flex-row justify-end gap-2 pb-6">
-            <Button variant="outline" onClick={() => setIsDetailOpen(false)}>
-              Tutup Preview
+          {/* Footer Sheet */}
+          <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 sticky bottom-0 z-10 flex gap-3">
+            <Button
+              variant="outline"
+              className="flex-1 h-12 rounded-xl font-bold dark:border-slate-800 dark:bg-slate-900"
+              onClick={() => setIsDetailOpen(false)}
+            >
+              Tutup
             </Button>
             <Button
-              className="bg-slate-900 hover:bg-slate-800"
+              className="flex-1 h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/20"
               onClick={() => {
-                // --- 4. PERBAIKAN ERROR TYPESCRIPT ---
                 if (selectedReport) {
                   setIsDetailOpen(false);
                   handleOpenUpdate(selectedReport);
                 }
               }}
             >
-              Update Status Laporan
+              Update Tindakan
             </Button>
           </div>
         </SheetContent>
       </Sheet>
 
-      {/* MODAL / DIALOG UPDATE STATUS */}
+      {/* 4. MODAL UPDATE STATUS */}
       <Dialog open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
         <DialogContent
-          className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
+          className="sm:max-w-[500px] p-0 overflow-hidden rounded-3xl border-none bg-white dark:bg-slate-950 shadow-2xl"
           data-lenis-prevent="true"
         >
-          <DialogHeader>
-            <DialogTitle>Update Status Laporan</DialogTitle>
-            <DialogDescription>
-              Perbarui status tiket{" "}
-              <span className="font-mono font-bold text-slate-800">
+          <DialogHeader className="bg-indigo-600 p-6 md:p-8 text-white relative overflow-hidden text-left">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
+            <DialogTitle className="text-2xl font-black tracking-tight relative z-10">
+              Update Status
+            </DialogTitle>
+            <DialogDescription className="text-indigo-100 mt-1 font-medium relative z-10">
+              Ubah status tiket{" "}
+              <code className="bg-black/20 px-1.5 py-0.5 rounded font-mono text-white">
                 {selectedReport?.ticket_code}
-              </span>
-              . Perubahan ini akan memicu notifikasi email ke pelapor.
+              </code>
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-6 py-4">
-            <div className="bg-slate-50 p-3 rounded-md border text-sm text-slate-600">
-              <span className="font-semibold block text-slate-800 mb-1">
-                Kronologi Singkat:
-              </span>
-              <p className="line-clamp-2">{selectedReport?.description}</p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="status">Ubah Status Menjadi</Label>
+          <div className="p-6 md:p-8 space-y-6">
+            <div className="space-y-3">
+              <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                Pilih Status Baru
+              </Label>
               <Select value={newStatus} onValueChange={setNewStatus}>
-                <SelectTrigger id="status">
-                  <SelectValue placeholder="Pilih status baru" />
+                <SelectTrigger className="h-14 rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-indigo-500 text-sm font-semibold">
+                  <SelectValue placeholder="Pilih status" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Menunggu Verifikasi</SelectItem>
-                  <SelectItem value="verifikasi">
+                <SelectContent className="rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900">
+                  <SelectItem value="pending" className="font-medium">
+                    Menunggu Verifikasi
+                  </SelectItem>
+                  <SelectItem value="verifikasi" className="font-medium">
                     Sedang Diverifikasi
                   </SelectItem>
-                  <SelectItem value="proses">Proses Kajian (Pleno)</SelectItem>
-                  <SelectItem value="selesai">
+                  <SelectItem value="proses" className="font-medium">
+                    Proses Kajian (Pleno)
+                  </SelectItem>
+                  <SelectItem value="selesai" className="font-medium">
                     Selesai / Putusan Keluar
                   </SelectItem>
-                  <SelectItem value="ditolak">
-                    Ditolak (Tidak Memenuhi Syarat)
+                  <SelectItem
+                    value="ditolak"
+                    className="font-medium text-rose-500"
+                  >
+                    Ditolak (TMS)
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="notes">Catatan Admin (Opsional)</Label>
+            <div className="space-y-3">
+              <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                Catatan Admin (Opsional)
+              </Label>
               <Textarea
-                id="notes"
-                placeholder="Tambahkan alasan mengapa status diubah..."
+                placeholder="Alasan perubahan status akan dikirimkan ke email pelapor..."
                 value={adminNotes}
                 onChange={(e) => setAdminNotes(e.target.value)}
-                className="min-h-[100px]"
+                className="min-h-[120px] rounded-xl border-slate-200 dark:border-slate-800 dark:bg-slate-900 focus:ring-indigo-500 resize-none text-sm"
               />
-              <p className="text-[11px] text-slate-500">
-                Catatan ini akan dikirim ke email pelapor jika status berubah
-                menjadi Ditolak atau Selesai.
-              </p>
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsUpdateOpen(false)}>
+          <DialogFooter className="px-6 md:px-8 pb-6 md:pb-8 pt-0 flex gap-3">
+            <Button
+              variant="ghost"
+              className="flex-1 h-12 rounded-xl font-bold dark:hover:bg-slate-900"
+              onClick={() => setIsUpdateOpen(false)}
+            >
               Batal
             </Button>
             <Button
               onClick={handleSaveUpdate}
-              className="bg-slate-900 hover:bg-slate-800"
+              className="flex-1 h-12 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white font-bold shadow-lg shadow-black/10 dark:shadow-indigo-500/20"
               disabled={isUpdating}
             >
-              {isUpdating ? "Menyimpan..." : "Simpan Perubahan"}
+              {isUpdating ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                "Simpan Perubahan"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

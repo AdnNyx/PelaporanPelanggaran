@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system" // Akan mengikuti tema laptop/HP user secara otomatis
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >

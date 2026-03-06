@@ -34,13 +34,12 @@ export default function ForgotPasswordPage() {
     // Simulasi jeda server / API Call pengiriman email (2 detik)
     setTimeout(() => {
       setIsLoading(false);
-      setIsSent(true); // Mengubah status untuk menampilkan layar sukses
+      setIsSent(true);
     }, 2000);
   };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center p-4 transition-colors duration-500">
-      {/* Tombol kembali ke Login */}
       <Link
         href="/login"
         className="absolute top-8 left-8 flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
@@ -50,7 +49,6 @@ export default function ForgotPasswordPage() {
       </Link>
 
       <div className="w-full max-w-md animate-in fade-in zoom-in-95 duration-500">
-        {/* LOGO AREA */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-red-100 dark:bg-red-500/10 rounded-2xl shadow-inner">
@@ -63,7 +61,6 @@ export default function ForgotPasswordPage() {
         </div>
 
         <Card className="shadow-2xl border-t-4 border-t-slate-900 dark:border-t-red-600 dark:bg-slate-900 border-x-slate-200 border-b-slate-200 dark:border-x-slate-800 dark:border-b-slate-800 transition-colors">
-          {/* TAMPILAN 1: FORM INPUT EMAIL */}
           {!isSent ? (
             <>
               <CardHeader className="space-y-1 text-center pb-6">
@@ -117,7 +114,6 @@ export default function ForgotPasswordPage() {
               </CardContent>
             </>
           ) : (
-            // TAMPILAN 2: SUKSES KIRIM EMAIL
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 text-center py-8 px-6">
               <div className="flex justify-center mb-4">
                 <div className="p-4 bg-green-100 dark:bg-green-500/10 rounded-full">
