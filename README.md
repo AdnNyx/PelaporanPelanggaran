@@ -43,36 +43,39 @@ Proyek ini dibangun dengan arsitektur **Decoupled (Headless)**:
 ```bash
 git clone [https://github.com/AdnNyx/PelaporanPelanggaran.git](https://github.com/AdnNyx/PelaporanPelanggaran.git)
 cd PelaporanPelanggaran
-2. Konfigurasi Backend (Laravel)
-Bash
+```
+### 2. Konfigurasi Backend (Laravel)
+```Bash
 cd backend
 composer install
 cp .env.example .env
 php artisan key:generate
 php artisan storage:link
 Buka file .env dan atur konfigurasi database serta kredensial SMTP Gmail.
-
+```
 Migrasi & Admin Default:
 
-Bash
+```Bash
 php artisan migrate --seed
 php artisan serve
+```
 3. Konfigurasi Frontend (Next.js)
-Bash
+```Bash
 cd ../frontend
 npm install
 npm run dev
+```
 Buka http://localhost:3000 di browser Anda.
 
-🔑 Kredensial Login Default
+## 🔑 Kredensial Login Default
 Gunakan akun berikut untuk pengujian awal (Super Admin):
 
 Email: admin@bawaslu.go.id
 
 Password: password123
 
-📂 Struktur Proyek
-Plaintext
+## 📂 Struktur Proyek
+```Plaintext
 ├── backend/                # Laravel Framework
 │   ├── app/Http/Controllers/Api/  # Auth & Report Logic
 │   ├── app/Models/                # Eloquent Models (User, Report, Evidence)
@@ -83,10 +86,11 @@ Plaintext
     ├── src/app/(auth)/            # Login & Auth Pages
     ├── src/components/            # UI Components (Shadcn)
     └── src/hooks/                 # Custom React Hooks
-🛡️ Keamanan & Privasi
+```
+## 🛡️ Keamanan & Privasi
 Platform ini dirancang dengan prinsip enkripsi data modern. Identitas pelapor dilindungi oleh sistem dan hanya dapat diakses oleh petugas berwenang Bawaslu untuk keperluan klarifikasi internal.
 
-👨‍💻 Developer
-AdnNyx - GitHub Profile
+## 👨‍💻 Developer
+AdnNyx
 
 © 2026 Bawaslu Kabupaten Tegal. All Rights Reserved.
