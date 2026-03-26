@@ -5,7 +5,7 @@
 ---
 
 ## 📸 Tampilan Utama
-[Dashboard Si-Walu](Gallery/screenshot.png)`
+![Dashboard Si-Walu](Gallery/screenshot.png)`
 
 ---
 
