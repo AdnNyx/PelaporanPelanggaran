@@ -91,5 +91,5 @@ Password: password123
 Platform ini dirancang dengan prinsip enkripsi data modern. Identitas pelapor dilindungi oleh sistem dan hanya dapat diakses oleh petugas berwenang Bawaslu untuk keperluan klarifikasi internal.
 
 ## 👨‍💻 Developer
-AdnNyx
+[AdnNyx](https://www.instagram.com/adn_nyx/)
 
