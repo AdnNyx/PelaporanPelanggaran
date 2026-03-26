@@ -5,8 +5,7 @@
 ---
 
 ## 📸 Tampilan Utama
-> *Tambahkan screenshot aplikasi Anda di sini untuk tampilan profil GitHub yang lebih menarik*
-> `![Dashboard Si-Walu](/path/to/your/screenshot.png)`
+[Dashboard Si-Walu](Gallery/screenshot.png)`
 
 ---
 
