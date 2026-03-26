@@ -59,7 +59,7 @@ Migrasi & Admin Default:
 php artisan migrate --seed
 php artisan serve
 ```
-3. Konfigurasi Frontend (Next.js)
+### 3. Konfigurasi Frontend (Next.js)
 ```Bash
 cd ../frontend
 npm install
@@ -93,4 +93,3 @@ Platform ini dirancang dengan prinsip enkripsi data modern. Identitas pelapor di
 ## 👨‍💻 Developer
 AdnNyx
 
-© 2026 Bawaslu Kabupaten Tegal. All Rights Reserved.
