@@ -48,16 +48,27 @@ cd PelaporanPelanggaran
 ### 2. Konfigurasi Backend (Laravel)
 ```Bash
 cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan storage:link
-Buka file .env dan atur konfigurasi database serta kredensial SMTP Gmail.
 ```
-Migrasi & Admin Default:
+```
+composer install
+```
+```
+cp .env.example .env
+```
+```
+php artisan key:generate
+```
+```
+php artisan storage:link
+```
+Buka file .env dan atur konfigurasi database serta kredensial SMTP Gmail.
+
+**Migrasi & Admin Default:**
 
 ```Bash
 php artisan migrate --seed
+```
+```
 php artisan serve
 ```
 ### 3. Konfigurasi Frontend (Next.js)
