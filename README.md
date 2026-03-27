@@ -61,7 +61,7 @@ php artisan key:generate
 ```bash
 php artisan storage:link
 ```
-Buka file .env dan atur konfigurasi database serta kredensial SMTP Gmail.
+Buka file ```.env``` dan atur konfigurasi database serta kredensial SMTP Gmail.
 
 **Migrasi & Admin Default:**
 
