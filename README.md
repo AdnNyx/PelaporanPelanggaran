@@ -40,7 +40,9 @@ Proyek ini dibangun dengan arsitektur **Decoupled (Headless)**:
 
 ### 1. Kloning Repositori
 ```bash
-git clone [https://github.com/AdnNyx/PelaporanPelanggaran.git](https://github.com/AdnNyx/PelaporanPelanggaran.git)
+git clone https://github.com/AdnNyx/PelaporanPelanggaran.git
+```
+```bash
 cd PelaporanPelanggaran
 ```
 ### 2. Konfigurasi Backend (Laravel)
