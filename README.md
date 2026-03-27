@@ -46,35 +46,39 @@ git clone https://github.com/AdnNyx/PelaporanPelanggaran.git
 cd PelaporanPelanggaran
 ```
 ### 2. Konfigurasi Backend (Laravel)
-```Bash
+```bash
 cd backend
 ```
-```
+```bash
 composer install
 ```
-```
+```bash
 cp .env.example .env
 ```
-```
+```bash
 php artisan key:generate
 ```
-```
+```bash
 php artisan storage:link
 ```
 Buka file .env dan atur konfigurasi database serta kredensial SMTP Gmail.
 
 **Migrasi & Admin Default:**
 
-```Bash
+```bash
 php artisan migrate --seed
 ```
-```
+```bash
 php artisan serve
 ```
 ### 3. Konfigurasi Frontend (Next.js)
-```Bash
-cd ../frontend
+```bash
+cd frontend
+```
+```bash
 npm install
+```
+```bash
 npm run dev
 ```
 Buka http://localhost:3000 di browser Anda.
