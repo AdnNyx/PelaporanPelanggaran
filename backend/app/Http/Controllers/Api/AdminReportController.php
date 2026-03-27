@@ -4,19 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
-use App\Models\Setting; // Ditambahkan untuk cek pengaturan SMTP
+use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail; // Ditambahkan untuk mengirim email
-use App\Mail\UpdateStatusLaporan; // Ditambahkan untuk memanggil template email
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UpdateStatusLaporan; 
 
 class AdminReportController extends Controller
 {
-    // 1. Ambil Statistik untuk Halaman Dashboard
+    // Statistik Halaman Dashboard
     public function stats()
     {
         $reports = Report::all();
 
-        // 1. Data untuk Kartu Metrik
         $metrics = [
             'total'      => collect($reports)->count(),
             'pending'    => collect($reports)->where('status', 'pending')->count(),
@@ -26,7 +25,6 @@ class AdminReportController extends Controller
             'ditolak'    => collect($reports)->where('status', 'ditolak')->count(),
         ];
 
-        // 2. Data untuk Grafik Donut (Kategori)
         $categoryStats = collect($reports)->groupBy('category')->map(function ($item, $key) {
             return [
                 'name' => ucwords(str_replace('_', ' ', $key)),
@@ -34,7 +32,6 @@ class AdminReportController extends Controller
             ];
         })->values();
 
-        // 3. Data untuk Grafik Area (Tren Bulanan Tahun Ini)
         $monthlyStats = [];
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
         
@@ -44,7 +41,6 @@ class AdminReportController extends Controller
                 return $r->created_at->month == $monthNum && $r->created_at->year == date('Y');
             });
 
-            // Hanya tampilkan bulan dari Januari sampai bulan saat ini
             if ($monthNum <= date('n')) {
                 $monthlyStats[] = [
                     'bulan' => $month,
@@ -64,10 +60,9 @@ class AdminReportController extends Controller
         ], 200);
     }
 
-    // 2. Ambil Semua Data Laporan (Untuk Halaman Tabel Laporan)
+    // Ambil Semua Data Laporan
     public function index()
     {
-        // Mengambil semua laporan beserta buktinya, diurutkan dari yang paling baru
         $reports = Report::with('evidences')->latest()->get();
         
         return response()->json([
@@ -76,7 +71,7 @@ class AdminReportController extends Controller
         ], 200);
     }
 
-    // 3. Update Status dan Catatan (Saat tombol "Simpan Perubahan" diklik)
+    // Update Status dan Catatan
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -99,8 +94,7 @@ class AdminReportController extends Controller
             'admin_notes' => $request->admin_notes
         ]);
 
-        // --- LOGIKA PENGIRIMAN EMAIL OTOMATIS ---
-        // Cek apakah fitur SMTP di Pengaturan Sistem dalam kondisi "On"
+        // Logika Pengiriman Email Otomatis
         $isSmtpEnabled = Setting::where('key', 'smtp_enabled')->value('value') !== 'false';
 
         if ($isSmtpEnabled) {
@@ -117,5 +111,47 @@ class AdminReportController extends Controller
             'message' => 'Status laporan berhasil diperbarui.',
             'data'    => $report
         ], 200);
+    }
+
+    // Ekspor Data ke CSV
+    public function exportCsv()
+    {
+        $reports = Report::latest()->get();
+
+        $filename = "Rekap_Laporan_Bawaslu_" . date('Y-m-d') . ".csv";
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Nomor Tiket', 'Tanggal Masuk', 'Nama Pelapor', 'Email Pelapor', 'Kategori', 'Status', 'Catatan Admin'];
+
+        $callback = function() use($reports, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            fputs($file, $bom =(chr(0xEF) . chr(0xBB) . chr(0xBF)));
+            
+            fputcsv($file, $columns);
+
+            foreach ($reports as $report) {
+                $row['Nomor Tiket']   = $report->ticket_code;
+                $row['Tanggal Masuk'] = $report->created_at->format('Y-m-d H:i');
+                $row['Nama Pelapor']  = $report->reporter_name;
+                $row['Email Pelapor'] = $report->reporter_email;
+                $row['Kategori']      = ucwords(str_replace('_', ' ', $report->category));
+                $row['Status']        = strtoupper($report->status);
+                $row['Catatan Admin'] = $report->admin_notes ?? '-';
+
+                fputcsv($file, array($row['Nomor Tiket'], $row['Tanggal Masuk'], $row['Nama Pelapor'], $row['Email Pelapor'], $row['Kategori'], $row['Status'], $row['Catatan Admin']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

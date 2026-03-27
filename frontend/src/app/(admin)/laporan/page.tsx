@@ -54,6 +54,7 @@ import {
   CheckCircle2,
   AlertCircle,
   FileText,
+  Download, // <-- IKON BARU DITAMBAHKAN
 } from "lucide-react";
 
 import { useCustomToast } from "@/hooks/use-custom-toast";
@@ -76,7 +77,7 @@ export type ReportData = {
   reporter_email: string;
   reporter_address: string;
   admin_notes: string | null;
-  evidences: EvidenceData[]; // Array dari tabel evidences
+  evidences: EvidenceData[];
 };
 
 export default function LaporanPage() {
@@ -89,21 +90,23 @@ export default function LaporanPage() {
 
   // STATE PENCARIAN & FILTER
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all"); // "all", "pending", "proses", dll
+  const [filterStatus, setFilterStatus] = useState("all");
 
   // STATE UI KONTROL
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportData | null>(null);
 
-  // STATE FORM UPDATE
+  // STATE FORM UPDATE & EKSPOR
   const [newStatus, setNewStatus] = useState("");
   const [adminNotes, setAdminNotes] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isExporting, setIsExporting] = useState(false); // <-- STATE BARU
 
   // AMBIL DATA DARI LARAVEL SAAT HALAMAN DIBUKA
   useEffect(() => {
     fetchReports();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchReports = async () => {
@@ -182,6 +185,45 @@ export default function LaporanPage() {
     }
   };
 
+  // --- HANDLER EKSPOR CSV ---
+  const handleExport = async () => {
+    setIsExporting(true);
+    const token = localStorage.getItem("admin_token");
+
+    try {
+      const res = await fetch(
+        "http://127.0.0.1:8000/api/admin/reports/export",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      if (!res.ok) throw new Error("Gagal mengunduh data");
+
+      // Mengubah respons menjadi file Blob
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Membuat elemen anchor <a> sementara untuk memicu unduhan
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Rekap_Laporan_Bawaslu_${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+
+      // Membersihkan DOM
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toastSuccess("Berhasil", "Data laporan berhasil diunduh.");
+    } catch (error) {
+      console.error(error);
+      toastError("Gagal Ekspor", "Terjadi kesalahan saat mengunduh file.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   // HANDLER BUKA MODAL
   const handleOpenUpdate = (report: ReportData) => {
     setSelectedReport(report);
@@ -257,7 +299,7 @@ export default function LaporanPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto animate-in fade-in duration-700">
       {/* 1. HEADER PAGE */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 bg-white dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800/60 shadow-sm backdrop-blur-xl">
+      <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 bg-white dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800/60 shadow-sm backdrop-blur-xl">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500/20 to-blue-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-3">
             <ShieldCheck className="w-3.5 h-3.5" /> Security Panel
@@ -270,9 +312,9 @@ export default function LaporanPage() {
           </p>
         </div>
 
-        {/* INPUT PENCARIAN & FILTER STATUS */}
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="relative flex-1 md:w-64">
+        {/* INPUT PENCARIAN & FILTER STATUS & EKSPOR */}
+        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+          <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               type="text"
@@ -329,6 +371,20 @@ export default function LaporanPage() {
               </SelectItem>
             </SelectContent>
           </Select>
+
+          {/* TOMBOL EKSPOR */}
+          <Button
+            onClick={handleExport}
+            disabled={isExporting}
+            className="h-12 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-sm shadow-emerald-500/20"
+          >
+            {isExporting ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4 mr-2" />
+            )}
+            <span className="hidden sm:inline">Ekspor CSV</span>
+          </Button>
         </div>
       </div>
 

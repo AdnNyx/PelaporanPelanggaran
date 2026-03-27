@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['success' => true, 'data' => $request->user()]);
     });
 
-    // Rute Khusus Admin | Pengelolaan Laporan
+    // Pengelolaan Laporan
     Route::get('/admin/dashboard-stats', [AdminReportController::class, 'stats']);
     Route::get('/admin/reports', [AdminReportController::class, 'index']);
     Route::put('/admin/reports/{id}', [AdminReportController::class, 'update']);
@@ -33,12 +33,15 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('/admin/settings/profile', [SettingController::class, 'updateProfile']);
 
-    // Rute Pengaturan Notifikasi Email
+    // Notifikasi Email
     Route::get('/admin/settings/email', [App\Http\Controllers\SettingController::class, 'getEmailSettings']);
     Route::post('/admin/settings/email', [App\Http\Controllers\SettingController::class, 'updateEmailSettings']);
 
-    // Rute Kelola Staf Admin
+    // Kelola Staf Admin
     Route::get('/admin/users', [App\Http\Controllers\Api\AdminUserController::class, 'index']);
     Route::post('/admin/users', [App\Http\Controllers\Api\AdminUserController::class, 'store']);
     Route::delete('/admin/users/{id}', [App\Http\Controllers\Api\AdminUserController::class, 'destroy']);
+
+    // Export CSV
+    Route::get('/admin/reports/export', [App\Http\Controllers\Api\AdminReportController::class, 'exportCsv']);
 });
